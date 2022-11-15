@@ -1,3 +1,10 @@
+# 1.0.0 (2022-11-15)
+
+
+### Features
+
+* initial commit ([e6cd78b](https://github.com/bloc-state/bloc/commit/e6cd78bc18e0c86e2dc6900f89f912a5d19924eb))
+
 ## [1.1.1](https://github.com/bloc-state/core/compare/v1.1.0...v1.1.1) (2022-11-15)
 
 ### Bug Fixes
