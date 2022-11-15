@@ -1,7 +1,7 @@
 {
-  "name": "my-ts-lib",
+  "name": "@bloc-state/bloc",
   "version": "0.0.0-semantic-release",
-  "description": "My awesome typescript library",
+  "description": "The core library for bloc-state.",
   "publishConfig": {
     "access": "public"
   },
@@ -24,17 +24,27 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "@bloc-state/state": "^1.0.3",
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "@egoist/prettier-config": "1.0.0",
-    "@types/jest": "^27.5.2",
+    "@semantic-release/changelog": "^6.0.1",
+    "@semantic-release/git": "^10.0.1",
+    "@types/jest": "^29.2.3",
     "husky": "^8.0.2",
     "jest": "^29.3.1",
+    "jest-environment-jsdom": "^29.3.1",
     "lint-staged": "12.3.5",
     "prettier": "2.7.1",
+    "rxjs": "^7.5.7",
+    "semantic-release": "^19.0.5",
     "ts-jest": "^29.0.3",
-    "tsup": "6.4.0",
-    "typescript": "^4.8.4"
+    "tsup": "6.5.0",
+    "typescript": "^4.8.2"
+  },
+  "peerDependencies": {
+    "@bloc-state/state": "^1.0.3",
+    "rxjs": "^7.5.7"
   },
   "lint-staged": {
     "*.{js,ts,css,md}": "prettier --write"
