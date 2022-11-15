@@ -1,0 +1,31 @@
+// https://dev.to/kouts/automated-versioning-and-package-publishing-using-github-actions-and-semantic-release-1kce
+
+module.exports = {
+  branches: [
+    "main",
+    {
+      name: "beta",
+      prerelease: true,
+    },
+  ],
+  plugins: [
+    "@semantic-release/commit-analyzer",
+    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/changelog",
+      {
+        changelogFile: "CHANGELOG.md",
+      },
+    ],
+    "@semantic-release/npm",
+    "@semantic-release/github",
+    [
+      "@semantic-release/git",
+      {
+        assets: ["CHANGELOG.md", "dist/**", "package.json"],
+        message:
+          "chore(release): set `package.json` to ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}",
+      },
+    ],
+  ],
+}
