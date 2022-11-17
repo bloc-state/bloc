@@ -1,3 +1,16 @@
+# [2.0.0-beta.1](https://github.com/bloc-state/bloc/compare/v1.0.0...v2.0.0-beta.1) (2022-11-17)
+
+
+### Features
+
+* rewrite bloc/cubit to conform to bloc 8.0 api ([d1308fe](https://github.com/bloc-state/bloc/commit/d1308fe6a8baabea40d532133d15f886380dd5ae))
+
+
+### BREAKING CHANGES
+
+* bloc and cubit will now handle concurrency in a similar
+manner to Bloc v8.x
+
 # 1.0.0 (2022-11-15)
 
 
