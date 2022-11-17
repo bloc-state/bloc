@@ -2,9 +2,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [main, beta]
   pull_request:
-    branches: [main]
+    branches: [main, beta]
 
 jobs:
   test:
@@ -71,7 +71,7 @@ jobs:
       - run: npm i -g pnpm
       - run: pnpm i
       - run: pnpm i --save-dev @semantic-release/changelog @semantic-release/git
-      - run: pnpx semantic-release --branches main
+      - run: pnpx semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
