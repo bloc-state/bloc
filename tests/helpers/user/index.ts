@@ -12,10 +12,6 @@ export interface User {
 
 export class UserState extends BlocState<User> {}
 
-export class UserNameChangeState extends UserState {}
-
-export class UserAgeChangedState extends UserState {}
-
 export class UserEvent extends BlocEvent {}
 
 export class UserNameChangedEvent extends UserEvent {
@@ -31,26 +27,9 @@ export class UserAgeChangedEvent extends UserEvent {
 }
 
 export class UserBloc extends Bloc<UserEvent, UserState> {
-  name$ = this.select((state) => state.name)
-
-  ageWithSelectorMethod$ = this.select((state) => state.age)
-
-  age$ = this.select({
-    selector: (state) => state.age as number,
-  })
-
-  bob$ = this.select({
-    selector: (state) => state.name.first,
-    filter: (name) => name === "bob",
-  })
-
-  firstName$ = this.select({
-    selector: (state) => state.name.first,
-  })
-
   constructor() {
     super(
-      UserNameChangeState.init({
+      new UserState({
         name: {
           first: "",
           last: "",
@@ -59,20 +38,20 @@ export class UserBloc extends Bloc<UserEvent, UserState> {
       }),
     )
 
-    this.on(
-      UserNameChangedEvent,
-      (event, emit) => {
-        emit(UserNameChangeState.ready({ ...this.data, name: event.name }))
-      },
-      { listenTo: UserNameChangeState },
-    )
+    this.on(UserNameChangedEvent, (event, emit) => {
+      emit(
+        this.state.ready((data) => {
+          data.name = event.name
+        }),
+      )
+    })
 
-    this.on(
-      UserAgeChangedEvent,
-      (event, emit) => {
-        emit(UserAgeChangedState.ready({ ...this.data, age: event.age }))
-      },
-      { listenTo: UserAgeChangedState },
-    )
+    this.on(UserAgeChangedEvent, (event, emit) => {
+      emit(
+        this.state.ready((data) => {
+          data.age = event.age
+        }),
+      )
+    })
   }
 }

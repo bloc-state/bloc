@@ -1,7 +1,6 @@
-import { BlocState } from "@bloc-state/state"
 import { BlocEvent } from "."
 
-export class Transition<Event extends BlocEvent, State extends BlocState> {
+export class Transition<Event extends BlocEvent, State> {
   constructor(
     public currentState: State,
     public event: Event,

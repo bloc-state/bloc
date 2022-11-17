@@ -1,22 +1,19 @@
 import {
-  BehaviorSubject,
   Observable,
   Subscription,
   distinctUntilChanged,
   shareReplay,
-  map,
-  filter,
-  EMPTY,
+  Subject,
 } from "rxjs"
 import { Bloc } from "./bloc"
 import { Change } from "./change"
-import { CubitSelectorConfig, EmitUpdaterCallback } from "./types"
+import { EmitUpdaterCallback } from "./types"
 
 export abstract class BlocBase<State = any> {
   constructor(state: State) {
     this.#state = state
     this.emit = this.emit.bind(this)
-    this.#stateSubject$ = new BehaviorSubject(state)
+    this.#stateSubject$ = new Subject()
     this.state$ = this.#buildStatePipeline()
     this.#stateSubscription = this.#subscribeStateoState()
     this.onCreate()
@@ -24,7 +21,7 @@ export abstract class BlocBase<State = any> {
 
   #state: State
 
-  readonly #stateSubject$: BehaviorSubject<State>
+  readonly #stateSubject$: Subject<State>
 
   readonly #stateSubscription: Subscription
 
@@ -85,26 +82,6 @@ export abstract class BlocBase<State = any> {
         if (error instanceof Error) this.onError(error)
       }
     }
-  }
-
-  select<K>(
-    config: CubitSelectorConfig<State, K> | ((state: State) => K),
-  ): Observable<K> {
-    let stream$: Observable<K> = EMPTY
-
-    if ("selector" in config) {
-      stream$ = this.state$.pipe(
-        map(config.selector),
-        filter(config.filter ?? (() => true)),
-      )
-    } else if (typeof config === "function") {
-      stream$ = this.state$.pipe(map(config))
-    }
-
-    return stream$.pipe(
-      distinctUntilChanged(),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    )
   }
 
   close() {

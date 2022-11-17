@@ -26,11 +26,10 @@ describe("Cubit", () => {
     const states: number[] = []
     state$.pipe(tap((state) => states.push(state))).subscribe({
       complete: () => {
-        const [first, second, third] = states
-        expect(states.length).toBe(3)
-        expect(first).toBe(0)
-        expect(second).toBe(1)
-        expect(third).toBe(2)
+        const [first, second] = states
+        expect(states.length).toBe(2)
+        expect(first).toBe(1)
+        expect(second).toBe(2)
         done()
       },
     })
@@ -44,12 +43,11 @@ describe("Cubit", () => {
       const states: number[] = []
       state$.pipe(tap((state) => states.push(state))).subscribe({
         complete: () => {
-          const [first, second, third, fourth] = states
-          expect(states.length).toBe(4)
-          expect(first).toBe(0)
-          expect(second).toBe(1)
-          expect(third).toBe(0)
-          expect(fourth).toBe(1)
+          const [first, second, third] = states
+          expect(states.length).toBe(3)
+          expect(first).toBe(1)
+          expect(second).toBe(0)
+          expect(third).toBe(1)
           done()
         },
       })
@@ -139,113 +137,11 @@ describe("Cubit", () => {
     cubit.emit(4)
     cubit.emit((previous) => previous + 1)
 
-    const [a, b, c] = states
+    const [a, b] = states
 
-    expect(states.length).toBe(3)
-    expect(a).toBe(0)
-    expect(b).toBe(2)
-    expect(c).toBe(3)
+    expect(states.length).toBe(2)
+    expect(a).toBe(2)
+    expect(b).toBe(3)
     done()
-  })
-
-  describe("Cubit.select", () => {
-    type Car = {
-      brand: string
-      year: number
-    }
-
-    class CarBloc extends Cubit<Car> {
-      constructor(car: Car) {
-        super(car)
-      }
-
-      brandsFiltered$ = this.select({
-        selector: (car) => car.brand,
-        filter: (brand) => brand.length <= 4,
-      })
-
-      brand$ = this.select((car) => car.brand)
-
-      year$ = this.select({
-        selector: (car) => car.year,
-      })
-
-      updateCar(car: Partial<Car>) {
-        this.emit((previous) => ({ ...previous, ...car }))
-      }
-    }
-
-    let bloc: CarBloc
-
-    beforeEach(() => {
-      bloc = new CarBloc({ brand: "ford", year: 2021 })
-    })
-
-    it("should map cars mapped state", (done) => {
-      const brands: string[] = []
-
-      bloc.brand$.subscribe({
-        next: (brand) => brands.push(brand),
-        complete: () => {
-          const [a, b, c, d] = brands
-          expect(brands.length).toBe(4)
-          expect(a).toBe("ford")
-          expect(b).toBe("toyota")
-          expect(c).toBe("mercedes")
-          expect(d).toBe("bmw")
-          done()
-        },
-      })
-
-      bloc.updateCar({ brand: "toyota" })
-      bloc.updateCar({ brand: "mercedes" })
-      bloc.updateCar({ brand: "bmw" })
-      bloc.updateCar({ year: 2022 })
-      bloc.close()
-    })
-
-    it("should map years to selected state", (done) => {
-      const years: number[] = []
-
-      bloc.year$.subscribe({
-        next: (year) => years.push(year),
-        complete: () => {
-          const [a, b] = years
-
-          expect(years.length).toBe(2)
-          expect(a).toBe(2021)
-          expect(b).toBe(2022)
-          done()
-        },
-      })
-
-      bloc.updateCar({ brand: "toyota" })
-      bloc.updateCar({ brand: "mercedes" })
-      bloc.updateCar({ brand: "bmw" })
-      bloc.updateCar({ year: 2022 })
-      bloc.close()
-    })
-
-    it("should filter selected mapped state", (done) => {
-      const brands: string[] = []
-      bloc.brandsFiltered$.subscribe({
-        next: (brand) => brands.push(brand),
-        complete: () => {
-          const [a, b] = brands
-
-          expect(brands.length).toBe(2)
-          expect(a).toBe("ford")
-          expect(b).toBe("bmw")
-          done()
-        },
-      })
-
-      bloc.updateCar({ brand: "toyota" })
-      bloc.updateCar({ brand: "mercedes" })
-      bloc.updateCar({ brand: "bmw" })
-      bloc.updateCar({ year: 2022 })
-
-      bloc.close()
-    })
   })
 })

@@ -1,4 +1,4 @@
-import { BlocState } from "@bloc-state/state"
+import { BlocState, BlocStateStatus } from "@bloc-state/state"
 import { Observable, interval, take } from "rxjs"
 import { Bloc, BlocEvent } from "../src"
 import { delay } from "./helpers/counter/delay"
@@ -13,49 +13,37 @@ describe("emitter", () => {
 
   class IntervalBloc extends Bloc<IntervalEvent, IntervalState> {
     constructor(stream$: Observable<number>) {
-      super(IntervalState.init(10)) // initial state is 10 to differentiate from state emitted from a stream
+      super(new IntervalState(10)) // initial state is 10 to differentiate from state emitted from a stream
 
-      this.on(
-        IntervalNoEmitOnCloseEvent,
-        async (event, emit) => {
-          await emit.forEach(stream$, (data) => {
-            return IntervalState.ready(data)
-          })
-          emit.close()
-          await delay(1000)
-          emit(IntervalState.ready(10))
-        },
-        { listenTo: IntervalState },
-      )
+      this.on(IntervalNoEmitOnCloseEvent, async (event, emit) => {
+        await emit.forEach(stream$, (data) => {
+          return this.state.ready(data)
+        })
+        emit.close()
+        await delay(1000)
+        emit(this.state.ready(10))
+      })
 
-      this.on(
-        IntervalForEachEvent,
-        async (event, emit) => {
-          await emit.forEach(
-            stream$,
-            (data) => IntervalState.ready(data),
-            (error) => IntervalState.failed(error),
-          )
-        },
-        { listenTo: IntervalState },
-      )
+      this.on(IntervalForEachEvent, async (event, emit) => {
+        await emit.forEach(
+          stream$,
+          (data) => this.state.ready(data),
+          (error) => this.state.failed(error),
+        )
+      })
 
-      this.on(
-        IntervalOnEachEvent,
-        async (event, emit) => {
-          await emit.onEach(
-            stream$,
-            (data) => {
-              emit(IntervalState.ready(data))
-            },
-            (error) => {
-              emit(IntervalState.failed(error))
-            },
-          )
-          emit(IntervalState.loading()) // set loading to trigger completion
-        },
-        {},
-      )
+      this.on(IntervalOnEachEvent, async (event, emit) => {
+        await emit.onEach(
+          stream$,
+          (data) => {
+            emit(this.state.ready(data))
+          },
+          (error) => {
+            emit(this.state.failed(error))
+          },
+        )
+        emit(this.state.loading()) // set loading to trigger completion
+      })
     }
   }
 
@@ -72,15 +60,14 @@ describe("emitter", () => {
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
-          if (state.payload.hasData) {
-            states.push(state.payload.data)
-          }
-          if (state.payload.loading) {
+          if (state.status === BlocStateStatus.loading) {
             intervalBloc.close()
+          } else {
+            states.push(state.data)
           }
         },
         complete: () => {
-          expect(states.length).toBe(4)
+          expect(states.length).toBe(3)
           done()
         },
       })
@@ -102,19 +89,17 @@ describe("emitter", () => {
 
       bloc.state$.subscribe({
         next: (state) => {
-          if (state.payload.hasData || state.payload.hasError) {
-            states.push(state)
-          }
-          if (state.payload.loading) {
+          if (state.status === BlocStateStatus.loading) {
             bloc.close()
+          } else {
+            states.push(state)
           }
         },
         complete: () => {
-          const [a, b, c] = states
-          expect(states.length).toBe(3)
-          expect(a.payload.data).toBe(10)
-          expect(b.payload.data).toBe(1)
-          expect(c.payload.error?.message).toBe("stream error")
+          const [a, b] = states
+          expect(states.length).toBe(2)
+          expect(a.data).toBe(1)
+          expect(b.error?.message).toBe("stream error")
           done()
         },
       })
@@ -128,12 +113,10 @@ describe("emitter", () => {
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
-          if (state.payload.hasData) {
-            states.push(state.payload.data)
-          }
+          states.push(state.data)
         },
         complete: () => {
-          expect(states.length).toBe(4)
+          expect(states.length).toBe(3)
         },
       })
 
@@ -146,12 +129,10 @@ describe("emitter", () => {
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
-          if (state.payload.hasData) {
-            states.push(state.payload.data)
-          }
+          states.push(state.data)
         },
         complete: () => {
-          expect(states.length).toBe(4)
+          expect(states.length).toBe(3)
         },
       })
 
@@ -174,16 +155,16 @@ describe("emitter", () => {
 
       bloc.state$.subscribe({
         next: (state) => {
-          if (state.payload.hasData || state.payload.hasError) {
+          if (state.status === BlocStateStatus.ready || state.error) {
             states.push(state)
           }
         },
         complete: () => {
           const [a, b, c] = states
           expect(states.length).toBe(3)
-          expect(a.payload.data).toBe(10)
-          expect(b.payload.data).toBe(1)
-          expect(c.payload.error?.message).toBe("stream error")
+          expect(a.data).toBe(10)
+          expect(b.data).toBe(1)
+          expect(c.error?.message).toBe("stream error")
         },
       })
 

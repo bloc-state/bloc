@@ -5,40 +5,22 @@ import {
   CounterIncrementEvent,
   CounterNoEmitDataEvent,
 } from "./counter.event"
-import {
-  CounterDecrementState,
-  CounterIncrementState,
-  CounterState,
-} from "./counter.state"
+import { CounterState } from "./counter.state"
 
 export class CounterBloc extends Bloc<CounterEvent, CounterState> {
   constructor() {
-    super(CounterState.ready(0))
+    super(new CounterState(0))
 
-    this.on(
-      CounterIncrementEvent,
-      (event, emit) => {
-        emit(CounterIncrementState.ready(this.data + 1))
-      },
-      { listenTo: CounterIncrementState },
-    )
+    this.on(CounterIncrementEvent, (event, emit) => {
+      emit(this.state.ready((data) => data + 1))
+    })
 
-    this.on(
-      CounterDecrementEvent,
-      (event, emit) => {
-        emit(CounterDecrementState.ready(this.data - 1))
-      },
-      {
-        listenTo: CounterDecrementState,
-      },
-    )
+    this.on(CounterDecrementEvent, (event, emit) => {
+      emit((state) => state.ready((data) => data - 1))
+    })
 
-    this.on(
-      CounterNoEmitDataEvent,
-      (event, emit) => {
-        emit(CounterState.loading())
-      },
-      { listenTo: CounterState },
-    )
+    this.on(CounterNoEmitDataEvent, (event, emit) => {
+      emit(this.state.loading())
+    })
   }
 }
