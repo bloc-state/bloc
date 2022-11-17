@@ -1,3 +1,10 @@
+# [1.1.0-beta.1](https://github.com/bloc-state/bloc/compare/v1.0.0...v1.1.0-beta.1) (2022-11-17)
+
+
+### Features
+
+* rewrite bloc/cubit conform to bloc 8.0 api ([ddad0a8](https://github.com/bloc-state/bloc/commit/ddad0a849bac5dfa7d839a7de66a9c5c4a1c5261))
+
 # 1.0.0 (2022-11-15)
 
 
