@@ -23,12 +23,12 @@ export type EmitUpdaterCallback<T> = (state: T) => T
 
 export type EmitDataUpdaterCallback<T extends BlocState<any>> = (state: T) => T
 
-export interface Emitter<S extends BlocState<any>> extends BlocEmitter<S> {
-  (state: S): void
+export interface Emitter<S> extends BlocEmitter<S> {
+  (state: S | EmitUpdaterCallback<S>): void
   close: () => void
 }
 
-export type EventHandler<E extends BlocEvent, S extends BlocState<any>> = (
+export type EventHandler<E extends BlocEvent, S> = (
   event: InstanceType<ClassType<E>>,
   emitter: Emitter<S>,
 ) => void | Promise<void>
@@ -59,10 +59,7 @@ export type EventMapper<Event extends BlocEvent> = (
   event: Event,
 ) => Observable<void>
 
-export type OnEventConfig<
-  Event extends BlocEvent,
-  State extends BlocState<any>,
-> = {
+export type OnEventConfig<Event extends BlocEvent, State> = {
   listenTo?: ClassType<State>
   transformer?: EventTransformer<Event>
 }

@@ -1,4 +1,3 @@
-import { BlocState } from "@bloc-state/state"
 import {
   EMPTY,
   from,
@@ -6,12 +5,7 @@ import {
   Subject,
   Subscription,
   catchError,
-  shareReplay,
-  map,
-  distinctUntilChanged,
   filter,
-  BehaviorSubject,
-  mergeWith,
 } from "rxjs"
 import { BlocBase } from "./base"
 import { BlocObserver } from "./bloc-observer"
@@ -19,29 +13,19 @@ import { BlocEvent } from "./event"
 import { concurrent } from "./transformer"
 import { Transition } from "./transition"
 import {
-  BlocStateDataType,
   EventHandler,
   ClassType,
-  BlocSelectorConfig,
   EventTransformer,
   Emitter,
-  OnEventConfig,
+  EmitUpdaterCallback,
 } from "./types"
-
-export type DerivedStateMapValue<T> = {
-  state$: Observable<T>
-}
 
 export abstract class Bloc<
   Event extends BlocEvent,
-  State extends BlocState,
+  State,
 > extends BlocBase<State> {
   constructor(state: State) {
     super(state)
-    const { data } = state.payload
-    this.#dataSubject = new BehaviorSubject(data)
-    this.data$ = Bloc.subjectToShareReplayObservable(this.#dataSubject)
-    this.#data = data
     this.add = this.add.bind(this)
     this.on = this.on.bind(this)
     this.emit = this.emit.bind(this)
@@ -55,18 +39,7 @@ export abstract class Bloc<
 
   readonly #emitters = new Set<Emitter<State>>()
 
-  readonly #derivedStateMap = new Map<
-    ClassType<State>,
-    DerivedStateMapValue<State>
-  >()
-
-  readonly #dataSubject: BehaviorSubject<BlocStateDataType<State>>
-
   readonly isBlocInstance = true
-
-  readonly data$: Observable<BlocStateDataType<State>>
-
-  #data: BlocStateDataType<State>
 
   #mapEventToStateError(error: Error): Observable<never> {
     this.onError(error)
@@ -85,38 +58,44 @@ export abstract class Bloc<
     Bloc.observer.onEvent(this, event)
   }
 
-  protected on<T extends Event, S extends State>(
+  protected on<T extends Event>(
     event: ClassType<T>,
-    eventHandler: EventHandler<T, S>,
-    config?: OnEventConfig<T, S>,
+    eventHandler: EventHandler<T, State>,
+    transformer: EventTransformer<T> = Bloc.transformer,
   ): void {
-    const state = config?.listenTo
-    const transformer = config?.transformer ?? Bloc.transformer
-
     if (this.#eventMap.has(event)) {
       throw new Error(`${event.name} can only have one EventHandler`)
     }
 
     this.#eventMap.set(event, null)
 
-    if (state && !this.#derivedStateMap.has(state)) {
-      this.#subscribeToDerivedState(state)
-    }
-
     const mapEventToState = (event: T): Observable<void> => {
       const stateToBeEmittedStream$ = new Subject<State>()
       let disposables: Subscription[] = []
       let isClosed = false
 
-      const emitter: Emitter<State> = (nextState: State): void => {
+      const emitter: Emitter<State> = (
+        nextState: State | EmitUpdaterCallback<State>,
+      ): void => {
         if (isClosed) {
           return
         }
 
-        if (this.state !== nextState) {
+        let stateToBeEmitted: State
+
+        if (typeof nextState === "function") {
+          let callback = nextState as EmitUpdaterCallback<State>
+          stateToBeEmitted = callback(this.state)
+        } else {
+          stateToBeEmitted = nextState
+        }
+
+        if (this.state !== stateToBeEmitted) {
           try {
-            this.onTransition(new Transition(this.state, event, nextState))
-            stateToBeEmittedStream$.next(nextState)
+            this.onTransition(
+              new Transition(this.state, event, stateToBeEmitted),
+            )
+            stateToBeEmittedStream$.next(stateToBeEmitted)
           } catch (error) {
             if (error instanceof Error) this.onError(error)
           }
@@ -163,7 +142,7 @@ export abstract class Bloc<
       return new Observable((subscriber) => {
         stateToBeEmittedStream$.subscribe({
           next: (nextState) => {
-            this.emit(nextState, state)
+            this.emit(nextState)
           },
         })
 
@@ -197,81 +176,6 @@ export abstract class Bloc<
     this.#subscriptions.add(subscription)
   }
 
-  #createDerivedStateStream = (stateType: ClassType<State>) => {
-    return this.state$.pipe(
-      filter((state) => state instanceof stateType),
-      distinctUntilChanged(),
-      shareReplay({ bufferSize: 1, refCount: true }),
-    )
-  }
-
-  #subscribeToDerivedState<S extends State>(stateType: ClassType<S>) {
-    let subscription: Subscription
-
-    const state$ = this.#createDerivedStateStream(stateType)
-    subscription = state$.subscribe()
-    this.#derivedStateMap.set(stateType, {
-      state$,
-    })
-
-    this.#subscriptions.add(subscription)
-  }
-
-  #fetchDerivedState = <S extends State>(stateType: ClassType<S>) => {
-    const state$ = this.#derivedStateMap.get(stateType)?.state$
-
-    if (!state$) {
-      throw new Error(
-        `Bloc.getDerivedState: ${stateType} is not being listened to in this bloc`,
-      )
-    }
-
-    return state$
-  }
-
-  getDerivedState(stateType: ClassType<State>[]): Observable<State> {
-    const mergedDerivedState$ = stateType
-      .map((type) => this.#fetchDerivedState(type))
-      .reduceRight((prev, curr) => prev.pipe(mergeWith(curr)))
-    return mergedDerivedState$
-  }
-
-  get data(): BlocStateDataType<State> {
-    return this.#data
-  }
-
-  override emit(nextState: State, stateType?: ClassType<State>): void {
-    const { hasData, data } = nextState.payload
-
-    if (hasData) {
-      this.#emitData(data)
-    }
-
-    super.emit(nextState)
-  }
-
-  #emitData(data: any) {
-    // if the view model of this bloc is a primitive value or an Array, just return the new value
-    if (Array.isArray(this.#data) || this.#data !== Object(this.#data)) {
-      this.#data = data
-      this.#dataSubject.next(data)
-    } else {
-      // if the view model is an object, we can merge top level properties of an object
-      const mergedData = { ...this.#data, ...data }
-      this.#data = mergedData
-      this.#dataSubject.next(mergedData)
-    }
-  }
-
-  static subjectToShareReplayObservable = <T>(subject: Subject<T>) => {
-    return subject
-      .asObservable()
-      .pipe(
-        distinctUntilChanged(),
-        shareReplay({ bufferSize: 1, refCount: true }),
-      )
-  }
-
   static transformer: EventTransformer<any> = concurrent()
 
   static observer: BlocObserver = new BlocObserver()
@@ -288,25 +192,6 @@ export abstract class Bloc<
     return this
   }
 
-  override select<K>(
-    config:
-      | BlocSelectorConfig<State, K>
-      | ((state: BlocStateDataType<State>) => K),
-  ): Observable<K> {
-    let data$: Observable<K>
-    if (typeof config === "function") {
-      data$ = this.data$.pipe(map(config))
-    } else {
-      const selectorFilter = config.filter ?? (() => true)
-      data$ = this.data$.pipe(map(config.selector), filter(selectorFilter))
-    }
-
-    return data$.pipe(
-      distinctUntilChanged(),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    )
-  }
-
   override close(): void {
     for (const emitter of this.#emitters) {
       emitter.close()
@@ -318,7 +203,6 @@ export abstract class Bloc<
 
     this.#emitters.clear()
     this.#subscriptions.clear()
-    this.#derivedStateMap.clear()
     super.close()
   }
 }

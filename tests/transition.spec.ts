@@ -4,8 +4,8 @@ import { CounterState } from "./helpers/counter/counter.state"
 
 describe("transition", () => {
   it("should create a transition object", () => {
-    const current = CounterState.ready(0)
-    const next = CounterState.ready(1)
+    const current = new CounterState(0)
+    const next = current.ready(1)
     const event = new CounterIncrementEvent()
     const transition = new Transition(current, event, next)
 

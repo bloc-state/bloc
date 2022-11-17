@@ -24,7 +24,7 @@
   },
   "license": "MIT",
   "devDependencies": {
-    "@bloc-state/state": "^1.0.3",
+    "@bloc-state/state": "2.0.0-beta.2",
     "@commitlint/cli": "^17.2.0",
     "@commitlint/config-conventional": "^17.2.0",
     "@egoist/prettier-config": "1.0.0",
@@ -43,7 +43,7 @@
     "typescript": "^4.8.2"
   },
   "peerDependencies": {
-    "@bloc-state/state": "^1.0.3",
+    "@bloc-state/state": "2.0.0-beta.2",
     "rxjs": "^7.5.7"
   },
   "lint-staged": {

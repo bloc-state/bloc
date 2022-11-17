@@ -90,9 +90,9 @@ describe("bloc-observer", () => {
       blocObserver.onTransition(
         counterBloc,
         new Transition(
-          CounterState.ready(0),
+          new CounterState(0),
           new CounterIncrementEvent(),
-          CounterState.ready(1),
+          new CounterState(1),
         ),
       ),
     ).toBeUndefined()
@@ -105,8 +105,8 @@ describe("bloc-observer", () => {
     const [bloc, transition] = transitions[0]
 
     expect(bloc).toBe(counterBloc)
-    expect(transition.currentState.payload.data).toBe(0)
+    expect(transition.currentState.data).toBe(0)
     expect(transition.event).toBeInstanceOf(CounterIncrementEvent)
-    expect(transition.nextState.payload.data).toBe(1)
+    expect(transition.nextState.data).toBe(1)
   })
 })

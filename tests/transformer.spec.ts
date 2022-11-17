@@ -1,4 +1,4 @@
-import { BlocState } from "@bloc-state/state"
+import { BlocState, BlocStateStatus } from "@bloc-state/state"
 import { Bloc, BlocEvent } from "../src"
 import { restartable, sequential } from "../src/transformer"
 import { delay } from "./helpers/counter/delay"
@@ -18,30 +18,24 @@ describe("transformers", () => {
     EventTransformerState
   > {
     constructor() {
-      super(EventTransformerState.init(0))
+      super(new EventTransformerState(0))
 
       this.on(
         EventTransformerSequentialEvent,
         async (event, emit) => {
           await delay(1000)
-          emit(EventTransformerState.ready(this.data + 1))
+          emit(this.state.ready((data) => data + 1))
         },
-        {
-          listenTo: EventTransformerState,
-          transformer: sequential(),
-        },
+        sequential(),
       )
 
       this.on(
         EventTransformerRestartableEvent,
         async (event, emit) => {
           await delay(1000)
-          emit(EventTransformerState.ready(event.num))
+          emit(this.state.ready(event.num))
         },
-        {
-          listenTo: EventTransformerState,
-          transformer: restartable(),
-        },
+        restartable(),
       )
     }
   }
@@ -61,18 +55,18 @@ describe("transformers", () => {
           states.push(state)
         },
         complete: () => {
-          expect(states.length).toBe(6)
+          expect(states.length).toBe(5)
         },
       })
 
-      expect(states.length).toBe(1)
+      expect(states.length).toBe(0)
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       await delay(3100)
-      expect(states.length).toBe(4)
+      expect(states.length).toBe(3)
       await delay(3000)
       transformerBloc.close()
     }, 10000)
@@ -86,12 +80,12 @@ describe("transformers", () => {
         complete: () => {
           const [a, b] = states
           expect(states.length).toBe(2)
-          expect(a.payload.initial).toBe(true)
-          expect(b.payload.data).toBe(2)
+          expect(a.status === BlocStateStatus.initial).toBe(true)
+          expect(b.data).toBe(2)
         },
       })
 
-      expect(states.length).toBe(1)
+      expect(states.length).toBe(0)
       transformerBloc.add(new EventTransformerRestartableEvent())
       transformerBloc.add(new EventTransformerRestartableEvent())
       transformerBloc.add(new EventTransformerRestartableEvent())
