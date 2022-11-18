@@ -1,3 +1,10 @@
+# [2.0.0-beta.2](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-11-18)
+
+
+### Features
+
+* **BlocBase:** use BehaviorSubject instead of Subject internally ([d2355d8](https://github.com/bloc-state/bloc/commit/d2355d804e5515288d2cb832fc89d34949846d04))
+
 # [2.0.0-beta.1](https://github.com/bloc-state/bloc/compare/v1.0.0...v2.0.0-beta.1) (2022-11-17)
 
 
