@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@bloc-state/state': 2.0.0-beta.2
+  '@bloc-state/state': 2.0.0-beta.3
   '@commitlint/cli': ^17.2.0
   '@commitlint/config-conventional': ^17.2.0
   '@egoist/prettier-config': 1.0.0
@@ -20,7 +20,7 @@ specifiers:
   typescript: ^4.8.2
 
 devDependencies:
-  '@bloc-state/state': 2.0.0-beta.2
+  '@bloc-state/state': 2.0.0-beta.3
   '@commitlint/cli': 17.2.0
   '@commitlint/config-conventional': 17.2.0
   '@egoist/prettier-config': 1.0.0
@@ -379,8 +379,8 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@bloc-state/state/2.0.0-beta.2:
-    resolution: {integrity: sha512-bnIBghn018/GRJDhPMQy8s6ELEkuz2sL9suoBB2J5UxYf34jIWK7dAIEimzfAStrAhcpts00PYlGsPZ64jzuzA==}
+  /@bloc-state/state/2.0.0-beta.3:
+    resolution: {integrity: sha512-j7+b6JdQY9P43XanyfTPBshFej2i5txydWYPMi5356VPEJwqMJcGKGR5Ox4dp0D1+CrXV4CeeH13F+eTDhBIlA==}
     dependencies:
       immer: 9.0.16
     dev: true

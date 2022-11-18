@@ -37,10 +37,10 @@ describe("bloc", () => {
       next: (state) => states.push(state),
       complete: () => {
         const [first, second, third, fourth] = states
-        expect(first.data).toBe(1)
-        expect(second.data).toBe(2)
-        expect(third.data).toBe(3)
-        expect(fourth.data).toBe(2)
+        expect(first.data).toBe(0)
+        expect(second.data).toBe(1)
+        expect(third.data).toBe(2)
+        expect(fourth.data).toBe(3)
         bloc.close()
         done()
       },

@@ -3,7 +3,7 @@ import {
   Subscription,
   distinctUntilChanged,
   shareReplay,
-  Subject,
+  BehaviorSubject,
 } from "rxjs"
 import { Bloc } from "./bloc"
 import { Change } from "./change"
@@ -13,7 +13,7 @@ export abstract class BlocBase<State = any> {
   constructor(state: State) {
     this.#state = state
     this.emit = this.emit.bind(this)
-    this.#stateSubject$ = new Subject()
+    this.#stateSubject$ = new BehaviorSubject(state)
     this.state$ = this.#buildStatePipeline()
     this.#stateSubscription = this.#subscribeStateoState()
     this.onCreate()
@@ -21,7 +21,7 @@ export abstract class BlocBase<State = any> {
 
   #state: State
 
-  readonly #stateSubject$: Subject<State>
+  readonly #stateSubject$: BehaviorSubject<State>
 
   readonly #stateSubscription: Subscription
 

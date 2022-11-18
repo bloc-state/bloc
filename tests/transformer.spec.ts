@@ -55,18 +55,18 @@ describe("transformers", () => {
           states.push(state)
         },
         complete: () => {
-          expect(states.length).toBe(5)
+          expect(states.length).toBe(6)
         },
       })
 
-      expect(states.length).toBe(0)
+      expect(states.length).toBe(1)
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       await delay(3100)
-      expect(states.length).toBe(3)
+      expect(states.length).toBe(4)
       await delay(3000)
       transformerBloc.close()
     }, 10000)
@@ -79,13 +79,13 @@ describe("transformers", () => {
         next: (state) => states.push(state),
         complete: () => {
           const [a, b] = states
-          expect(states.length).toBe(2)
+          expect(states.length).toBe(3)
           expect(a.status === BlocStateStatus.initial).toBe(true)
           expect(b.data).toBe(2)
         },
       })
 
-      expect(states.length).toBe(0)
+      expect(states.length).toBe(1)
       transformerBloc.add(new EventTransformerRestartableEvent())
       transformerBloc.add(new EventTransformerRestartableEvent())
       transformerBloc.add(new EventTransformerRestartableEvent())

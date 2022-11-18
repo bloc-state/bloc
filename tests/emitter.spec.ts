@@ -67,7 +67,7 @@ describe("emitter", () => {
           }
         },
         complete: () => {
-          expect(states.length).toBe(3)
+          expect(states.length).toBe(4)
           done()
         },
       })
@@ -96,10 +96,11 @@ describe("emitter", () => {
           }
         },
         complete: () => {
-          const [a, b] = states
-          expect(states.length).toBe(2)
-          expect(a.data).toBe(1)
-          expect(b.error?.message).toBe("stream error")
+          const [a, b, c] = states
+          expect(states.length).toBe(3)
+          expect(a.data).toBe(10)
+          expect(b.data).toBe(1)
+          expect(c.error?.message).toBe("stream error")
           done()
         },
       })
@@ -116,7 +117,7 @@ describe("emitter", () => {
           states.push(state.data)
         },
         complete: () => {
-          expect(states.length).toBe(3)
+          expect(states.length).toBe(4)
         },
       })
 
@@ -132,7 +133,7 @@ describe("emitter", () => {
           states.push(state.data)
         },
         complete: () => {
-          expect(states.length).toBe(3)
+          expect(states.length).toBe(4)
         },
       })
 

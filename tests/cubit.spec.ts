@@ -26,10 +26,11 @@ describe("Cubit", () => {
     const states: number[] = []
     state$.pipe(tap((state) => states.push(state))).subscribe({
       complete: () => {
-        const [first, second] = states
-        expect(states.length).toBe(2)
-        expect(first).toBe(1)
-        expect(second).toBe(2)
+        const [first, second, third] = states
+        expect(states.length).toBe(3)
+        expect(first).toBe(0)
+        expect(second).toBe(1)
+        expect(third).toBe(2)
         done()
       },
     })
@@ -43,11 +44,12 @@ describe("Cubit", () => {
       const states: number[] = []
       state$.pipe(tap((state) => states.push(state))).subscribe({
         complete: () => {
-          const [first, second, third] = states
-          expect(states.length).toBe(3)
-          expect(first).toBe(1)
-          expect(second).toBe(0)
-          expect(third).toBe(1)
+          const [first, second, third, fourth] = states
+          expect(states.length).toBe(4)
+          expect(first).toBe(0)
+          expect(second).toBe(1)
+          expect(third).toBe(0)
+          expect(fourth).toBe(1)
           done()
         },
       })
@@ -137,11 +139,12 @@ describe("Cubit", () => {
     cubit.emit(4)
     cubit.emit((previous) => previous + 1)
 
-    const [a, b] = states
+    const [a, b, c] = states
 
-    expect(states.length).toBe(2)
-    expect(a).toBe(2)
-    expect(b).toBe(3)
+    expect(states.length).toBe(3)
+    expect(a).toBe(0)
+    expect(b).toBe(2)
+    expect(c).toBe(3)
     done()
   })
 })
