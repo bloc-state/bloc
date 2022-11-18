@@ -1,3 +1,10 @@
+# [2.0.0-beta.3](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-11-18)
+
+
+### Features
+
+* **BlocBase:** added new constructor parameter BlocConfig ([c23198b](https://github.com/bloc-state/bloc/commit/c23198bc4e7cd7d2dc97a01c3477bbf0c1d7b89a))
+
 # [2.0.0-beta.2](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-11-18)
 
 
