@@ -5,6 +5,10 @@ import { Bloc } from "./bloc"
 import { Cubit } from "./cubit"
 import { BlocEvent } from "./event"
 
+export type BlocConfig = {
+  compare?: (previousState: any, nextState: any) => boolean
+}
+
 export interface BlocEmitter<State> {
   onEach<T>(
     stream$: Observable<T>,

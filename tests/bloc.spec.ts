@@ -1,5 +1,5 @@
 import { BlocState } from "@bloc-state/state"
-import { take } from "rxjs"
+import { skip, take } from "rxjs"
 import { BlocEvent, Bloc, Transition, isBlocInstance } from "../src"
 import { CounterBloc } from "./helpers/counter/counter.bloc"
 import { CounterCubit } from "./helpers/counter/counter.cubit"
@@ -33,14 +33,14 @@ describe("bloc", () => {
 
   it("should map events to state", (done) => {
     const states: CounterState[] = []
-    bloc.state$.pipe(take(4)).subscribe({
+    bloc.state$.pipe(skip(1), take(4)).subscribe({
       next: (state) => states.push(state),
       complete: () => {
         const [first, second, third, fourth] = states
-        expect(first.data).toBe(0)
-        expect(second.data).toBe(1)
-        expect(third.data).toBe(2)
-        expect(fourth.data).toBe(3)
+        expect(first.data).toBe(1)
+        expect(second.data).toBe(2)
+        expect(third.data).toBe(3)
+        expect(fourth.data).toBe(2)
         bloc.close()
         done()
       },

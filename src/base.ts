@@ -7,10 +7,11 @@ import {
 } from "rxjs"
 import { Bloc } from "./bloc"
 import { Change } from "./change"
-import { EmitUpdaterCallback } from "./types"
+import { BlocConfig, EmitUpdaterCallback } from "./types"
 
 export abstract class BlocBase<State = any> {
-  constructor(state: State) {
+  constructor(state: State, config?: BlocConfig) {
+    this.#config = config ?? {}
     this.#state = state
     this.emit = this.emit.bind(this)
     this.#stateSubject$ = new BehaviorSubject(state)
@@ -18,6 +19,8 @@ export abstract class BlocBase<State = any> {
     this.#stateSubscription = this.#subscribeStateoState()
     this.onCreate()
   }
+
+  #config: BlocConfig
 
   #state: State
 
@@ -33,7 +36,7 @@ export abstract class BlocBase<State = any> {
     return this.#stateSubject$
       .asObservable()
       .pipe(
-        distinctUntilChanged(),
+        distinctUntilChanged(this.#config.compare),
         shareReplay({ refCount: true, bufferSize: 1 }),
       )
   }
