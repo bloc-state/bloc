@@ -1,4 +1,4 @@
-import { BlocState, BlocStateStatus } from "@bloc-state/state"
+import { BlocState } from "@bloc-state/state"
 import { Bloc, BlocEvent } from "../src"
 import { restartable, sequential } from "../src/transformer"
 import { delay } from "./helpers/counter/delay"
@@ -23,8 +23,8 @@ describe("transformers", () => {
       this.on(
         EventTransformerSequentialEvent,
         async (event, emit) => {
-          await delay(1000)
-          emit(this.state.ready((data) => data + 1))
+          await delay(500)
+          emit((state) => state.ready(state.data + 1))
         },
         sequential(),
       )
@@ -32,7 +32,7 @@ describe("transformers", () => {
       this.on(
         EventTransformerRestartableEvent,
         async (event, emit) => {
-          await delay(1000)
+          await delay(500)
           emit(this.state.ready(event.num))
         },
         restartable(),
@@ -43,19 +43,20 @@ describe("transformers", () => {
   let transformerBloc: EventTransformerBloc
 
   beforeEach(() => {
-    transformerBloc?.close()
     transformerBloc = new EventTransformerBloc()
+  })
+
+  afterEach(() => {
+    transformerBloc.close()
   })
 
   describe("sequential", () => {
     it("should process each event sequentially, additional events added should be queued while processing current event", async () => {
+      expect.assertions(4)
       const states: EventTransformerState[] = []
       transformerBloc.state$.subscribe({
         next: (state) => {
           states.push(state)
-        },
-        complete: () => {
-          expect(states.length).toBe(6)
         },
       })
 
@@ -63,26 +64,21 @@ describe("transformers", () => {
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
       transformerBloc.add(new EventTransformerSequentialEvent())
-      transformerBloc.add(new EventTransformerSequentialEvent())
-      transformerBloc.add(new EventTransformerSequentialEvent())
-      await delay(3100)
+      await delay(600)
+      expect(states.length).toBe(2)
+      await delay(600)
+      expect(states.length).toBe(3)
+      await delay(600)
       expect(states.length).toBe(4)
-      await delay(3000)
-      transformerBloc.close()
-    }, 10000)
+    })
   })
 
   describe("restartable", () => {
     it("should process each event until completion or until a new event comes in", async () => {
+      expect.assertions(5)
       const states: EventTransformerState[] = []
       transformerBloc.state$.subscribe({
         next: (state) => states.push(state),
-        complete: () => {
-          const [a, b] = states
-          expect(states.length).toBe(3)
-          expect(a.status === BlocStateStatus.initial).toBe(true)
-          expect(b.data).toBe(2)
-        },
       })
 
       expect(states.length).toBe(1)
@@ -91,8 +87,12 @@ describe("transformers", () => {
       transformerBloc.add(new EventTransformerRestartableEvent())
       transformerBloc.add(new EventTransformerRestartableEvent())
       transformerBloc.add(new EventTransformerRestartableEvent(2))
-      await delay(3100)
-      transformerBloc.close()
-    }, 10000)
+      await delay(600)
+      const [first, second] = states
+      expect(states.length).toBe(2)
+      expect(first.data).toBe(0)
+      expect(second.data).toBe(2)
+      expect(second.status).toBe("ready")
+    })
   })
 })

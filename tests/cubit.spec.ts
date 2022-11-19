@@ -12,17 +12,19 @@ describe("Cubit", () => {
   })
 
   it("should create a new Cubit instance", () => {
+    expect.assertions(1)
     expect(cubit).toBeInstanceOf(Cubit)
   })
 
-  it("should close a cubit", (done) => {
+  it("should close a cubit", async () => {
+    expect.assertions(2)
+    expect(cubit.isClosed).toBe(false)
     cubit.close()
-    cubit.state$.subscribe({
-      complete: () => done(),
-    })
+    await expect(cubit.isClosed).toBe(true)
   })
 
   it("should return new state from actions", (done) => {
+    expect.assertions(4)
     const states: number[] = []
     state$.pipe(tap((state) => states.push(state))).subscribe({
       complete: () => {
@@ -40,6 +42,7 @@ describe("Cubit", () => {
   })
 
   it("should handle async actions", (done) => {
+    expect.assertions(5)
     void (async () => {
       const states: number[] = []
       state$.pipe(tap((state) => states.push(state))).subscribe({
@@ -108,6 +111,7 @@ describe("Cubit", () => {
     })
 
     it("should be invoked when an error is thrown from BlocBase.emit", () => {
+      expect.assertions(1)
       errorBloc.triggerError()
       const [a] = errors
 
@@ -115,6 +119,7 @@ describe("Cubit", () => {
     })
 
     it("should be invoked when an error is thrown from BlocBase.onChange", () => {
+      expect.assertions(1)
       try {
         errorBloc.triggerChange()
       } catch (e) {}
@@ -126,6 +131,7 @@ describe("Cubit", () => {
   })
 
   it("should not emit values if the bloc is closed", (done) => {
+    expect.assertions(4)
     const states: number[] = []
     cubit.state$.subscribe({
       next: (state) => states.push(state),

@@ -20,6 +20,8 @@ export abstract class BlocBase<State = any> {
     this.onCreate()
   }
 
+  #isClosed = false
+
   #config: BlocConfig
 
   #state: State
@@ -72,6 +74,10 @@ export abstract class BlocBase<State = any> {
     return this.#state
   }
 
+  get isClosed() {
+    return this.#isClosed
+  }
+
   emit(newState: State | EmitUpdaterCallback<State>): void {
     if (!this.#stateSubject$.closed) {
       try {
@@ -88,6 +94,7 @@ export abstract class BlocBase<State = any> {
   }
 
   close() {
+    this.#isClosed = true
     this.#stateSubject$.complete()
     this.#stateSubscription.unsubscribe()
   }

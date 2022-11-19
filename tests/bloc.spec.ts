@@ -17,10 +17,12 @@ describe("bloc", () => {
   })
 
   it("should be defined", () => {
+    expect.assertions(1)
     expect(bloc).toBeDefined()
   })
 
   it("should have initial state", (done) => {
+    expect.assertions(1)
     bloc.state$.subscribe({
       next: (state) => {
         expect(state.data).toBe(0)
@@ -32,6 +34,7 @@ describe("bloc", () => {
   })
 
   it("should map events to state", (done) => {
+    expect.assertions(4)
     const states: CounterState[] = []
     bloc.state$.pipe(skip(1), take(4)).subscribe({
       next: (state) => states.push(state),
@@ -53,6 +56,7 @@ describe("bloc", () => {
 
   describe("Bloc.on", () => {
     it("should work without optional config", () => {
+      expect.assertions(1)
       class TestState extends BlocState<null> {}
       class TestEvent extends BlocEvent {}
 
@@ -79,6 +83,7 @@ describe("bloc", () => {
     })
 
     it("should throw an error if attempting to subscribe to the same event more than once", () => {
+      expect.assertions(1)
       class TestState extends BlocState<null> {}
       class TestEvent extends BlocEvent {}
 
@@ -100,6 +105,7 @@ describe("bloc", () => {
 
   describe("Bloc.onError", () => {
     it("should be invoked when an error is thrown from Bloc.onEvent", (done) => {
+      expect.assertions(1)
       class TestState extends BlocState<null> {}
       class TestEvent extends BlocEvent {}
 
@@ -125,6 +131,7 @@ describe("bloc", () => {
     })
 
     it("should be invoked when an error is thrown inside an event callback", (done) => {
+      expect.assertions(1)
       class TestState extends BlocState<null> {}
       class TestEvent extends BlocEvent {}
 
@@ -148,6 +155,7 @@ describe("bloc", () => {
     })
 
     it("should be invoked when an error is thrown from onTransition", (done) => {
+      expect.assertions(1)
       class TestState extends BlocState<null> {}
       class TestEvent extends BlocEvent {}
 
@@ -179,6 +187,7 @@ describe("bloc", () => {
 
   describe("isBlocInstance", () => {
     it("should return true if provided an instance of a bloc", () => {
+      expect.assertions(2)
       expect(isBlocInstance(bloc)).toBe(true)
       const cubit = new CounterCubit()
       expect(isBlocInstance(cubit)).toBe(false)

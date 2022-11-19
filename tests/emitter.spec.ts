@@ -57,6 +57,7 @@ describe("emitter", () => {
 
   describe("emitter.onEach", () => {
     it("should emit values from a stream", (done) => {
+      expect.assertions(1)
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
@@ -76,6 +77,7 @@ describe("emitter", () => {
     })
 
     it("should invoke onError if an error is thrown from onEach stream", (done) => {
+      expect.assertions(4)
       const states: IntervalState[] = []
       const errorStream$ = new Observable<number>((subscriber) => {
         subscriber.next(1)
@@ -111,6 +113,7 @@ describe("emitter", () => {
 
   describe("emitter.forEach", () => {
     it("should emit state returned from onData", async () => {
+      expect.assertions(1)
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
@@ -127,6 +130,7 @@ describe("emitter", () => {
     }, 10000)
 
     it("should not emit after an emitter has been closed", async () => {
+      expect.assertions(1)
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
@@ -142,7 +146,8 @@ describe("emitter", () => {
       intervalBloc.close()
     }, 10000)
 
-    it("should emit state returned from onError when an error is thrown", async () => {
+    it("should emit state returned from onError when an error is thrown", (done) => {
+      expect.assertions(4)
       const states: IntervalState[] = []
       const errorStream$ = new Observable<number>((subscriber) => {
         subscriber.next(1)
@@ -156,22 +161,21 @@ describe("emitter", () => {
 
       bloc.state$.subscribe({
         next: (state) => {
-          if (state.status === "ready" || state.error) {
-            states.push(state)
-          }
+          states.push(state)
         },
         complete: () => {
           const [a, b, c] = states
+          console.log(states)
           expect(states.length).toBe(3)
           expect(a.data).toBe(10)
           expect(b.data).toBe(1)
           expect(c.error?.message).toBe("stream error")
+          done()
         },
       })
 
       bloc.add(new IntervalForEachEvent())
-      await delay(3000)
-      bloc.close()
-    }, 10000)
+      delay(1000).then(() => bloc.close())
+    })
   })
 })
