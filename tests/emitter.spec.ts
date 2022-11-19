@@ -1,4 +1,4 @@
-import { BlocState, BlocStateStatus } from "@bloc-state/state"
+import { BlocState } from "@bloc-state/state"
 import { Observable, interval, take } from "rxjs"
 import { Bloc, BlocEvent } from "../src"
 import { delay } from "./helpers/counter/delay"
@@ -60,7 +60,7 @@ describe("emitter", () => {
       const states: number[] = []
       intervalBloc.state$.subscribe({
         next: (state) => {
-          if (state.status === BlocStateStatus.loading) {
+          if (state.status === "loading") {
             intervalBloc.close()
           } else {
             states.push(state.data)
@@ -89,7 +89,7 @@ describe("emitter", () => {
 
       bloc.state$.subscribe({
         next: (state) => {
-          if (state.status === BlocStateStatus.loading) {
+          if (state.status === "loading") {
             bloc.close()
           } else {
             states.push(state)
@@ -156,7 +156,7 @@ describe("emitter", () => {
 
       bloc.state$.subscribe({
         next: (state) => {
-          if (state.status === BlocStateStatus.ready || state.error) {
+          if (state.status === "ready" || state.error) {
             states.push(state)
           }
         },

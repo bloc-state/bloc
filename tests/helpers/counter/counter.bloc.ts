@@ -12,15 +12,15 @@ export class CounterBloc extends Bloc<CounterEvent, CounterState> {
     super(new CounterState(0))
 
     this.on(CounterIncrementEvent, (event, emit) => {
-      emit(this.state.ready((data) => data + 1))
+      emit((state) => state.ready(state.data + 1))
     })
 
     this.on(CounterDecrementEvent, (event, emit) => {
-      emit((state) => state.ready((data) => data - 1))
+      emit((state) => state.ready(state.data - 1))
     })
 
     this.on(CounterNoEmitDataEvent, (event, emit) => {
-      emit(this.state.loading())
+      emit((state) => state.loading())
     })
   }
 }
