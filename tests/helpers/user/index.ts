@@ -1,4 +1,4 @@
-import { BlocState } from "@bloc-state/state"
+import { State } from "@bloc-state/state"
 import { Bloc } from "../../../src/bloc"
 import { BlocEvent } from "../../../src/event"
 
@@ -10,7 +10,17 @@ export interface User {
   age: number
 }
 
-export class UserState extends BlocState<User> {}
+export class UserState extends State<User> {
+  constructor() {
+    super({
+      name: {
+        first: "",
+        last: "",
+      },
+      age: 0,
+    })
+  }
+}
 
 export class UserEvent extends BlocEvent {}
 
@@ -28,15 +38,9 @@ export class UserAgeChangedEvent extends UserEvent {
 
 export class UserBloc extends Bloc<UserEvent, UserState> {
   constructor() {
-    super(
-      new UserState({
-        name: {
-          first: "",
-          last: "",
-        },
-        age: 0,
-      }),
-    )
+    super(new UserState(), {
+      compare: (prev, next) => prev.data !== next.data,
+    })
 
     this.on(UserNameChangedEvent, (event, emit) => {
       emit(

@@ -1,4 +1,4 @@
-import { BlocState } from "@bloc-state/state"
+import { State } from "@bloc-state/state"
 import { Bloc, BlocEvent } from "../src"
 import { restartable, sequential } from "../src/transformer"
 import { delay } from "./helpers/counter/delay"
@@ -11,7 +11,7 @@ describe("transformers", () => {
       super()
     }
   }
-  class EventTransformerState extends BlocState<number> {}
+  class EventTransformerState extends State<number> {}
 
   class EventTransformerBloc extends Bloc<
     EventTransformerEvent,

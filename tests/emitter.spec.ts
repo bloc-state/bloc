@@ -1,4 +1,4 @@
-import { BlocState } from "@bloc-state/state"
+import { State } from "@bloc-state/state"
 import { Observable, interval, take } from "rxjs"
 import { Bloc, BlocEvent } from "../src"
 import { delay } from "./helpers/counter/delay"
@@ -9,7 +9,7 @@ describe("emitter", () => {
   class IntervalForEachEvent extends IntervalEvent {}
   class IntervalNoEmitOnCloseEvent extends IntervalEvent {}
 
-  class IntervalState extends BlocState<number> {}
+  class IntervalState extends State<number> {}
 
   class IntervalBloc extends Bloc<IntervalEvent, IntervalState> {
     constructor(stream$: Observable<number>) {
@@ -165,7 +165,6 @@ describe("emitter", () => {
         },
         complete: () => {
           const [a, b, c] = states
-          console.log(states)
           expect(states.length).toBe(3)
           expect(a.data).toBe(10)
           expect(b.data).toBe(1)

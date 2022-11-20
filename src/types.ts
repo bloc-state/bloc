@@ -1,12 +1,12 @@
-import { BlocState } from "@bloc-state/state"
+import { State } from "@bloc-state/state"
 import { Observable } from "rxjs"
 import { BlocBase } from "./base"
 import { Bloc } from "./bloc"
 import { Cubit } from "./cubit"
 import { BlocEvent } from "./event"
 
-export type BlocConfig = {
-  compare?: (previousState: any, nextState: any) => boolean
+export type BlocConfig<T> = {
+  compare?: (previousState: T, nextState: T) => boolean
 }
 
 export interface BlocEmitter<State> {
@@ -25,7 +25,7 @@ export interface BlocEmitter<State> {
 
 export type EmitUpdaterCallback<T> = (state: T) => T
 
-export type EmitDataUpdaterCallback<T extends BlocState<any>> = (state: T) => T
+export type EmitDataUpdaterCallback<T extends State<any>> = (state: T) => T
 
 export interface Emitter<S> extends BlocEmitter<S> {
   (state: S | EmitUpdaterCallback<S>): void
@@ -41,21 +41,16 @@ export interface ClassType<T = any> extends Function {
   new (...args: any[]): T
 }
 
-export type BlocStateType<T extends BlocBase<any>> = T extends Cubit<infer U>
+export type StateType<T extends BlocBase<any>> = T extends Cubit<infer U>
   ? U
   : T extends Bloc<any, infer D>
   ? D
   : never
 
-export type BlocStateDataType<T> = T extends BlocState<infer U> ? U : T
+export type StateDataType<T> = T extends State<infer U> ? U : T
 
 export type CubitSelectorConfig<State, P> = {
   selector: (state: State) => P
-  filter?: (state: P) => boolean
-}
-
-export type BlocSelectorConfig<State extends BlocState<any>, P> = {
-  selector: (state: BlocStateDataType<State>) => P
   filter?: (state: P) => boolean
 }
 

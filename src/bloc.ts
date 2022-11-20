@@ -25,7 +25,7 @@ export abstract class Bloc<
   Event extends BlocEvent,
   State,
 > extends BlocBase<State> {
-  constructor(state: State, config?: BlocConfig) {
+  constructor(state: State, config?: BlocConfig<State>) {
     // don't pass compare to BlocBase or else the comparison will happen twice
     super(state, { ...config, compare: undefined })
     this.on = this.on.bind(this)
@@ -34,7 +34,7 @@ export abstract class Bloc<
     this.#compare = config?.compare ?? ((a: any, b: any) => a !== b)
   }
 
-  readonly #compare: NonNullable<BlocConfig["compare"]>
+  readonly #compare: NonNullable<BlocConfig<State>["compare"]>
 
   readonly #eventSubject$ = new Subject<Event>()
 

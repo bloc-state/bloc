@@ -10,7 +10,7 @@ import { Change } from "./change"
 import { BlocConfig, EmitUpdaterCallback } from "./types"
 
 export abstract class BlocBase<State = any> {
-  constructor(state: State, config?: BlocConfig) {
+  constructor(state: State, config?: BlocConfig<State>) {
     this.#config = config ?? {}
     this.#state = state
     this.emit = this.emit.bind(this)
@@ -22,7 +22,7 @@ export abstract class BlocBase<State = any> {
 
   #isClosed = false
 
-  #config: BlocConfig
+  #config: BlocConfig<State>
 
   #state: State
 

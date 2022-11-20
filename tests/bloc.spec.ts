@@ -1,4 +1,4 @@
-import { BlocState } from "@bloc-state/state"
+import { State } from "@bloc-state/state"
 import { skip, take } from "rxjs"
 import { BlocEvent, Bloc, Transition, isBlocInstance } from "../src"
 import { CounterBloc } from "./helpers/counter/counter.bloc"
@@ -57,7 +57,7 @@ describe("bloc", () => {
   describe("Bloc.on", () => {
     it("should work without optional config", () => {
       expect.assertions(1)
-      class TestState extends BlocState<null> {}
+      class TestState extends State<null> {}
       class TestEvent extends BlocEvent {}
 
       class TestBloc extends Bloc<TestEvent, TestState> {
@@ -84,7 +84,7 @@ describe("bloc", () => {
 
     it("should throw an error if attempting to subscribe to the same event more than once", () => {
       expect.assertions(1)
-      class TestState extends BlocState<null> {}
+      class TestState extends State<null> {}
       class TestEvent extends BlocEvent {}
 
       class TestBloc extends Bloc<TestEvent, TestState> {
@@ -106,7 +106,7 @@ describe("bloc", () => {
   describe("Bloc.onError", () => {
     it("should be invoked when an error is thrown from Bloc.onEvent", (done) => {
       expect.assertions(1)
-      class TestState extends BlocState<null> {}
+      class TestState extends State<null> {}
       class TestEvent extends BlocEvent {}
 
       class TestBloc extends Bloc<TestEvent, TestState> {
@@ -132,7 +132,7 @@ describe("bloc", () => {
 
     it("should be invoked when an error is thrown inside an event callback", (done) => {
       expect.assertions(1)
-      class TestState extends BlocState<null> {}
+      class TestState extends State<null> {}
       class TestEvent extends BlocEvent {}
 
       class TestBloc extends Bloc<TestEvent, TestState> {
@@ -156,7 +156,7 @@ describe("bloc", () => {
 
     it("should be invoked when an error is thrown from onTransition", (done) => {
       expect.assertions(1)
-      class TestState extends BlocState<null> {}
+      class TestState extends State<null> {}
       class TestEvent extends BlocEvent {}
 
       class TestBloc extends Bloc<TestEvent, TestState> {
