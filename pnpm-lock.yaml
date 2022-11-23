@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@bloc-state/state': ^1.0.3
+  '@bloc-state/state': ^2.0.0
   '@commitlint/cli': ^17.2.0
   '@commitlint/config-conventional': ^17.2.0
   '@egoist/prettier-config': 1.0.0
@@ -20,7 +20,7 @@ specifiers:
   typescript: ^4.8.2
 
 devDependencies:
-  '@bloc-state/state': 1.0.3_rxjs@7.5.7
+  '@bloc-state/state': 2.0.0
   '@commitlint/cli': 17.2.0
   '@commitlint/config-conventional': 17.2.0
   '@egoist/prettier-config': 1.0.0
@@ -379,12 +379,10 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@bloc-state/state/1.0.3_rxjs@7.5.7:
-    resolution: {integrity: sha512-Y4bNEU/WYK9rUMGzV6ZxDijsOZ40RjAxg6k4yXAh5KGXxeDRlDXOVXThGsparjh40iUFpUn3hCrPj0WGueRfjg==}
-    peerDependencies:
-      rxjs: ^7.5.4
+  /@bloc-state/state/2.0.0:
+    resolution: {integrity: sha512-7SGo3qh0Xr+TKLCvmFCkygicc8h6zH580/fwv/ZivmXJXxQnmdARcFAsT8Yyi8FhRHTetLaacFkt/kVDjoGmTQ==}
     dependencies:
-      rxjs: 7.5.7
+      immer: 9.0.16
     dev: true
 
   /@colors/colors/1.5.0:
@@ -2711,6 +2709,10 @@ packages:
   /ignore/5.1.8:
     resolution: {integrity: sha512-BMpfD7PpiETpBl/A6S498BaIJ6Y/ABT93ETbby2fP00v4EbvPBXWEoaR1UBPKs3iR53pJY7EtZk5KACI57i1Uw==}
     engines: {node: '>= 4'}
+    dev: true
+
+  /immer/9.0.16:
+    resolution: {integrity: sha512-qenGE7CstVm1NrHQbMh8YaSzTZTFNP3zPqr3YU0S0UY441j4bJTg4A2Hh5KAhwgaiU6ZZ1Ar6y/2f4TblnMReQ==}
     dev: true
 
   /import-cwd/3.0.0:
