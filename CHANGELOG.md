@@ -1,3 +1,10 @@
+# [2.0.0-beta.5](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2022-11-23)
+
+
+### Features
+
+* **transformer:** move event transformers to another package ([e560948](https://github.com/bloc-state/bloc/commit/e56094865b43297fb96d6f8b5580d4b2f32e2a62))
+
 # [2.0.0-beta.4](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2022-11-20)
 
 
