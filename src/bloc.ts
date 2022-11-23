@@ -6,11 +6,11 @@ import {
   Subscription,
   catchError,
   filter,
+  mergeMap,
 } from "rxjs"
 import { BlocBase } from "./base"
 import { BlocObserver } from "./bloc-observer"
 import { BlocEvent } from "./event"
-import { concurrent } from "./transformer"
 import { Transition } from "./transition"
 import {
   EventHandler,
@@ -31,7 +31,7 @@ export abstract class Bloc<
     this.on = this.on.bind(this)
     this.add = this.add.bind(this)
     this.emit = this.emit.bind(this)
-    this.#compare = config?.compare ?? ((a: any, b: any) => a !== b)
+    this.#compare = config?.compare ?? ((a: State, b: State) => a !== b)
   }
 
   readonly #compare: NonNullable<BlocConfig<State>["compare"]>
@@ -181,7 +181,8 @@ export abstract class Bloc<
     this.#subscriptions.add(subscription)
   }
 
-  static transformer: EventTransformer<any> = concurrent()
+  static transformer: EventTransformer<any> = (events$, mapper) =>
+    events$.pipe(mergeMap(mapper))
 
   static observer: BlocObserver = new BlocObserver()
 

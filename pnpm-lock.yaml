@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@bloc-state/state': 2.0.0-beta.5
+  '@bloc-state/state': ^2.0.1
   '@commitlint/cli': ^17.2.0
   '@commitlint/config-conventional': ^17.2.0
   '@egoist/prettier-config': 1.0.0
@@ -9,6 +9,7 @@ specifiers:
   '@semantic-release/git': ^10.0.1
   '@types/jest': ^29.2.3
   husky: ^8.0.2
+  immer: ^9.0.16
   jest: ^29.3.1
   jest-environment-jsdom: ^29.3.1
   lint-staged: 12.3.5
@@ -20,7 +21,7 @@ specifiers:
   typescript: ^4.8.2
 
 devDependencies:
-  '@bloc-state/state': 2.0.0-beta.5
+  '@bloc-state/state': 2.0.1_immer@9.0.16
   '@commitlint/cli': 17.2.0
   '@commitlint/config-conventional': 17.2.0
   '@egoist/prettier-config': 1.0.0
@@ -28,6 +29,7 @@ devDependencies:
   '@semantic-release/git': 10.0.1_semantic-release@19.0.5
   '@types/jest': 29.2.3
   husky: 8.0.2
+  immer: 9.0.16
   jest: 29.3.1
   jest-environment-jsdom: 29.3.1
   lint-staged: 12.3.5
@@ -379,8 +381,10 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@bloc-state/state/2.0.0-beta.5:
-    resolution: {integrity: sha512-OP0/bFYDSzZDQilWlqVmHl2PWNARl0Ytn9pSJHC+OG0dKKL1X7kTQ+LoQQeP+yztvG74rf/GXDlROU8gE06Chg==}
+  /@bloc-state/state/2.0.1_immer@9.0.16:
+    resolution: {integrity: sha512-Q9t7jk318XJ4bCJabLuocsOm5RaBERgd3/czqlGjBIsYPqxMaYpLKWO3lyf7rKcB2C6/I5dIISjwh2JacqvaXg==}
+    peerDependencies:
+      immer: ^9.0.16
     dependencies:
       immer: 9.0.16
     dev: true
