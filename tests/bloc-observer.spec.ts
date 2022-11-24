@@ -16,6 +16,7 @@ describe("bloc-observer", () => {
   })
 
   it("should listen to events ", () => {
+    expect.assertions(2)
     const events: [bloc: Bloc<any, any>, event: any][] = []
     const errors: [bloc: Bloc<any, any>, error: any][] = []
 
@@ -42,6 +43,7 @@ describe("bloc-observer", () => {
   })
 
   it("should listen to errors ", () => {
+    expect.assertions(4)
     const errors: [bloc: BlocBase<any>, error: any][] = []
 
     class TestBlocObserver extends BlocObserver {
@@ -72,6 +74,7 @@ describe("bloc-observer", () => {
   })
 
   it("should listen to transitions ", () => {
+    expect.assertions(6)
     const transitions: [
       bloc: Bloc<any, any>,
       transition: Transition<any, any>,
@@ -90,9 +93,9 @@ describe("bloc-observer", () => {
       blocObserver.onTransition(
         counterBloc,
         new Transition(
-          CounterState.ready(0),
+          new CounterState(0),
           new CounterIncrementEvent(),
-          CounterState.ready(1),
+          new CounterState(1),
         ),
       ),
     ).toBeUndefined()
@@ -105,8 +108,21 @@ describe("bloc-observer", () => {
     const [bloc, transition] = transitions[0]
 
     expect(bloc).toBe(counterBloc)
-    expect(transition.currentState.payload.data).toBe(0)
+    expect(transition.currentState.data).toBe(0)
     expect(transition.event).toBeInstanceOf(CounterIncrementEvent)
-    expect(transition.nextState.payload.data).toBe(1)
+    expect(transition.nextState.data).toBe(1)
+  })
+
+  it("should listen to bloc closed", () => {
+    expect.assertions(1)
+    class TestBlocObserver extends BlocObserver {
+      override onClose(bloc: BlocBase<any>): void {
+        expect(bloc.isClosed).toBe(true)
+      }
+    }
+
+    Bloc.observer = new TestBlocObserver()
+
+    counterBloc.close()
   })
 })

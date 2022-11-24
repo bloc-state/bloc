@@ -1,16 +1,13 @@
 import {
-  BehaviorSubject,
   Observable,
   Subscription,
   distinctUntilChanged,
   shareReplay,
-  map,
-  filter,
-  EMPTY,
+  BehaviorSubject,
 } from "rxjs"
 import { Bloc } from "./bloc"
 import { Change } from "./change"
-import { CubitSelectorConfig, EmitUpdaterCallback } from "./types"
+import { EmitUpdaterCallback } from "./types"
 
 export abstract class BlocBase<State = any> {
   constructor(state: State) {
@@ -21,6 +18,8 @@ export abstract class BlocBase<State = any> {
     this.#stateSubscription = this.#subscribeStateoState()
     this.onCreate()
   }
+
+  #isClosed = false
 
   #state: State
 
@@ -66,10 +65,18 @@ export abstract class BlocBase<State = any> {
     Bloc.observer.onChange(this, change)
   }
 
+  protected onClose() {
+    Bloc.observer.onClose(this)
+  }
+
   readonly state$: Observable<State>
 
   get state(): State {
     return this.#state
+  }
+
+  get isClosed() {
+    return this.#isClosed
   }
 
   emit(newState: State | EmitUpdaterCallback<State>): void {
@@ -87,28 +94,11 @@ export abstract class BlocBase<State = any> {
     }
   }
 
-  select<K>(
-    config: CubitSelectorConfig<State, K> | ((state: State) => K),
-  ): Observable<K> {
-    let stream$: Observable<K> = EMPTY
-
-    if ("selector" in config) {
-      stream$ = this.state$.pipe(
-        map(config.selector),
-        filter(config.filter ?? (() => true)),
-      )
-    } else if (typeof config === "function") {
-      stream$ = this.state$.pipe(map(config))
-    }
-
-    return stream$.pipe(
-      distinctUntilChanged(),
-      shareReplay({ refCount: true, bufferSize: 1 }),
-    )
-  }
-
   close() {
+    this.#isClosed = true
     this.#stateSubject$.complete()
     this.#stateSubscription.unsubscribe()
+
+    this.onClose()
   }
 }

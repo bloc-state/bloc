@@ -1,3 +1,58 @@
+# [2.0.0-beta.7](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2022-11-24)
+
+
+### Features
+
+* **Bloc:** remove BlocConfig ([285a01f](https://github.com/bloc-state/bloc/commit/285a01f5750bd55f1cc22ea3a65114f995ba0099))
+
+# [2.0.0-beta.6](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2022-11-24)
+
+
+### Features
+
+* **BlocObserver:** added onClose method ([0915b73](https://github.com/bloc-state/bloc/commit/0915b73926ee1b1187714b0921f0ddf2bdc0e8fb))
+
+# [2.0.0-beta.5](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2022-11-23)
+
+
+### Features
+
+* **transformer:** move event transformers to another package ([e560948](https://github.com/bloc-state/bloc/commit/e56094865b43297fb96d6f8b5580d4b2f32e2a62))
+
+# [2.0.0-beta.4](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2022-11-20)
+
+
+### Features
+
+* added generic type to BlocConfig ([2cd1cda](https://github.com/bloc-state/bloc/commit/2cd1cdaecda0972cd0ad01b8d1f5ba0074ddceb7))
+
+# [2.0.0-beta.3](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-11-18)
+
+
+### Features
+
+* **BlocBase:** added new constructor parameter BlocConfig ([c23198b](https://github.com/bloc-state/bloc/commit/c23198bc4e7cd7d2dc97a01c3477bbf0c1d7b89a))
+
+# [2.0.0-beta.2](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-11-18)
+
+
+### Features
+
+* **BlocBase:** use BehaviorSubject instead of Subject internally ([d2355d8](https://github.com/bloc-state/bloc/commit/d2355d804e5515288d2cb832fc89d34949846d04))
+
+# [2.0.0-beta.1](https://github.com/bloc-state/bloc/compare/v1.0.0...v2.0.0-beta.1) (2022-11-17)
+
+
+### Features
+
+* rewrite bloc/cubit to conform to bloc 8.0 api ([d1308fe](https://github.com/bloc-state/bloc/commit/d1308fe6a8baabea40d532133d15f886380dd5ae))
+
+
+### BREAKING CHANGES
+
+* bloc and cubit will now handle concurrency in a similar
+manner to Bloc v8.x
+
 # 1.0.0 (2022-11-15)
 
 

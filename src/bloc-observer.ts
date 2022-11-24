@@ -21,4 +21,8 @@ export class BlocObserver {
   onChange(bloc: BlocBase<any>, change: Change<any>) {
     return
   }
+
+  onClose(bloc: BlocBase<any>): void {
+    return
+  }
 }
