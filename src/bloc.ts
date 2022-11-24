@@ -25,7 +25,6 @@ export abstract class Bloc<
   State,
 > extends BlocBase<State> {
   constructor(state: State) {
-    // don't pass compare to BlocBase or else the comparison will happen twice
     super(state)
     this.on = this.on.bind(this)
     this.add = this.add.bind(this)
