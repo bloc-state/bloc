@@ -1,3 +1,10 @@
+# [2.0.0-beta.6](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2022-11-24)
+
+
+### Features
+
+* **BlocObserver:** added onClose method ([0915b73](https://github.com/bloc-state/bloc/commit/0915b73926ee1b1187714b0921f0ddf2bdc0e8fb))
+
 # [2.0.0-beta.5](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2022-11-23)
 
 
