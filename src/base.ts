@@ -68,6 +68,10 @@ export abstract class BlocBase<State = any> {
     Bloc.observer.onChange(this, change)
   }
 
+  protected onClose() {
+    Bloc.observer.onClose(this)
+  }
+
   readonly state$: Observable<State>
 
   get state(): State {
@@ -97,5 +101,7 @@ export abstract class BlocBase<State = any> {
     this.#isClosed = true
     this.#stateSubject$.complete()
     this.#stateSubscription.unsubscribe()
+
+    this.onClose()
   }
 }

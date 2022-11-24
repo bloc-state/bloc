@@ -112,4 +112,17 @@ describe("bloc-observer", () => {
     expect(transition.event).toBeInstanceOf(CounterIncrementEvent)
     expect(transition.nextState.data).toBe(1)
   })
+
+  it("should listen to bloc closed", () => {
+    expect.assertions(1)
+    class TestBlocObserver extends BlocObserver {
+      override onClose(bloc: BlocBase<any>): void {
+        expect(bloc.isClosed).toBe(true)
+      }
+    }
+
+    Bloc.observer = new TestBlocObserver()
+
+    counterBloc.close()
+  })
 })
