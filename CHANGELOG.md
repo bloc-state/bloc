@@ -1,3 +1,118 @@
+# [2.0.0](https://github.com/bloc-state/bloc/compare/v1.0.0...v2.0.0) (2022-11-24)
+
+
+* v2.0.0 (#9) ([a66e3da](https://github.com/bloc-state/bloc/commit/a66e3da68502d057a23394a75b34f870c0289b3b)), closes [#9](https://github.com/bloc-state/bloc/issues/9)
+
+
+### Features
+
+* added generic type to BlocConfig ([2cd1cda](https://github.com/bloc-state/bloc/commit/2cd1cdaecda0972cd0ad01b8d1f5ba0074ddceb7))
+* **BlocBase:** added new constructor parameter BlocConfig ([c23198b](https://github.com/bloc-state/bloc/commit/c23198bc4e7cd7d2dc97a01c3477bbf0c1d7b89a))
+* **BlocBase:** use BehaviorSubject instead of Subject internally ([d2355d8](https://github.com/bloc-state/bloc/commit/d2355d804e5515288d2cb832fc89d34949846d04))
+* **BlocObserver:** added onClose method ([0915b73](https://github.com/bloc-state/bloc/commit/0915b73926ee1b1187714b0921f0ddf2bdc0e8fb))
+* **Bloc:** remove BlocConfig ([285a01f](https://github.com/bloc-state/bloc/commit/285a01f5750bd55f1cc22ea3a65114f995ba0099))
+* rewrite bloc/cubit to conform to bloc 8.0 api ([d1308fe](https://github.com/bloc-state/bloc/commit/d1308fe6a8baabea40d532133d15f886380dd5ae))
+* **transformer:** move event transformers to another package ([e560948](https://github.com/bloc-state/bloc/commit/e56094865b43297fb96d6f8b5580d4b2f32e2a62))
+
+
+### BREAKING CHANGES
+
+* bloc and cubit will now handle concurrency in a similar
+manner to Bloc v8.x
+
+* chore(release): set `package.json` to 2.0.0-beta.1 [skip ci]
+
+# [2.0.0-beta.1](https://github.com/bloc-state/bloc/compare/v1.0.0...v2.0.0-beta.1) (2022-11-17)
+
+### Features
+
+* rewrite bloc/cubit to conform to bloc 8.0 api ([d1308fe](https://github.com/bloc-state/bloc/commit/d1308fe6a8baabea40d532133d15f886380dd5ae))
+
+### BREAKING CHANGES
+
+* bloc and cubit will now handle concurrency in a similar
+manner to Bloc v8.x
+
+* feat(BlocBase): use BehaviorSubject instead of Subject internally
+
+* chore(release): set `package.json` to 2.0.0-beta.2 [skip ci]
+
+# [2.0.0-beta.2](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.1...v2.0.0-beta.2) (2022-11-18)
+
+### Features
+
+* **BlocBase:** use BehaviorSubject instead of Subject internally ([d2355d8](https://github.com/bloc-state/bloc/commit/d2355d804e5515288d2cb832fc89d34949846d04))
+
+* feat(BlocBase): added new constructor parameter BlocConfig
+
+BlocConfig will have Bloc specific configurable options, ex: a
+comparison function that can be provided to BlocConfig for comparing between
+transitioning of states.
+
+* chore(release): set `package.json` to 2.0.0-beta.3 [skip ci]
+
+# [2.0.0-beta.3](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.2...v2.0.0-beta.3) (2022-11-18)
+
+### Features
+
+* **BlocBase:** added new constructor parameter BlocConfig ([c23198b](https://github.com/bloc-state/bloc/commit/c23198bc4e7cd7d2dc97a01c3477bbf0c1d7b89a))
+
+* build(deps): bump @bloc-state/state to 2.0.0-beta.4
+
+* test: added expect.assertions to all tests
+
+* feat: added generic type to BlocConfig
+
+* chore(release): set `package.json` to 2.0.0-beta.4 [skip ci]
+
+# [2.0.0-beta.4](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.3...v2.0.0-beta.4) (2022-11-20)
+
+### Features
+
+* added generic type to BlocConfig ([2cd1cda](https://github.com/bloc-state/bloc/commit/2cd1cdaecda0972cd0ad01b8d1f5ba0074ddceb7))
+
+* refactor(types): removed unused types
+
+* feat(transformer): move event transformers to another package
+
+* chore(release): set `package.json` to 2.0.0-beta.5 [skip ci]
+
+# [2.0.0-beta.5](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.4...v2.0.0-beta.5) (2022-11-23)
+
+### Features
+
+* **transformer:** move event transformers to another package ([e560948](https://github.com/bloc-state/bloc/commit/e56094865b43297fb96d6f8b5580d4b2f32e2a62))
+
+* ci(semantic-release): remove redundant installation [skip-ci]
+
+* ci(codecov): added codecov github action to ci
+
+* feat(BlocObserver): added onClose method
+
+* chore(release): set `package.json` to 2.0.0-beta.6 [skip ci]
+
+# [2.0.0-beta.6](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2022-11-24)
+
+### Features
+
+* **BlocObserver:** added onClose method ([0915b73](https://github.com/bloc-state/bloc/commit/0915b73926ee1b1187714b0921f0ddf2bdc0e8fb))
+
+* docs(reademe): update readme
+
+* feat(Bloc): remove BlocConfig
+
+* chore(release): set `package.json` to 2.0.0-beta.7 [skip ci]
+
+# [2.0.0-beta.7](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2022-11-24)
+
+### Features
+
+* **Bloc:** remove BlocConfig ([285a01f](https://github.com/bloc-state/bloc/commit/285a01f5750bd55f1cc22ea3a65114f995ba0099))
+
+Co-authored-by: semantic-release-bot <semantic-release-bot@martynus.net>
+* bloc and cubit will now handle concurrency in a similar
+manner to Bloc v8.x
+
 # [2.0.0-beta.7](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2022-11-24)
 
 
