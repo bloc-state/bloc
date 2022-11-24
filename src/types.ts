@@ -2,10 +2,6 @@ import { State } from "@bloc-state/state"
 import { Observable } from "rxjs"
 import { BlocEvent } from "./event"
 
-export type BlocConfig<T> = {
-  compare?: (previousState: T, nextState: T) => boolean
-}
-
 export interface BlocEmitter<State> {
   onEach<T>(
     stream$: Observable<T>,

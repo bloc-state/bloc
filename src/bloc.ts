@@ -18,23 +18,19 @@ import {
   EventTransformer,
   Emitter,
   EmitUpdaterCallback,
-  BlocConfig,
 } from "./types"
 
 export abstract class Bloc<
   Event extends BlocEvent,
   State,
 > extends BlocBase<State> {
-  constructor(state: State, config?: BlocConfig<State>) {
+  constructor(state: State) {
     // don't pass compare to BlocBase or else the comparison will happen twice
-    super(state, { ...config, compare: undefined })
+    super(state)
     this.on = this.on.bind(this)
     this.add = this.add.bind(this)
     this.emit = this.emit.bind(this)
-    this.#compare = config?.compare ?? ((a: State, b: State) => a !== b)
   }
-
-  readonly #compare: NonNullable<BlocConfig<State>["compare"]>
 
   readonly #eventSubject$ = new Subject<Event>()
 
@@ -95,7 +91,7 @@ export abstract class Bloc<
           stateToBeEmitted = nextState
         }
 
-        if (this.#compare(this.state, stateToBeEmitted)) {
+        if (this.state !== stateToBeEmitted) {
           try {
             this.onTransition(
               new Transition(this.state, event, stateToBeEmitted),

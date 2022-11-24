@@ -38,21 +38,19 @@ export class UserAgeChangedEvent extends UserEvent {
 
 export class UserBloc extends Bloc<UserEvent, UserState> {
   constructor() {
-    super(new UserState(), {
-      compare: (prev, next) => prev.data !== next.data,
-    })
+    super(new UserState())
 
     this.on(UserNameChangedEvent, (event, emit) => {
-      emit(
-        this.state.ready((data) => {
+      emit((state) =>
+        state.ready((data) => {
           data.name = event.name
         }),
       )
     })
 
     this.on(UserAgeChangedEvent, (event, emit) => {
-      emit(
-        this.state.ready((data) => {
+      emit((state) =>
+        state.ready((data) => {
           data.age = event.age
         }),
       )
