@@ -1,3 +1,10 @@
+# [2.0.0-beta.7](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.6...v2.0.0-beta.7) (2022-11-24)
+
+
+### Features
+
+* **Bloc:** remove BlocConfig ([285a01f](https://github.com/bloc-state/bloc/commit/285a01f5750bd55f1cc22ea3a65114f995ba0099))
+
 # [2.0.0-beta.6](https://github.com/bloc-state/bloc/compare/v2.0.0-beta.5...v2.0.0-beta.6) (2022-11-24)
 
 
