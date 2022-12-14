@@ -1,9 +1,8 @@
 # @bloc-state/bloc
 
-![Codecov](https://badgen.net/npm/v/@bloc-state/bloc?color=black)
-![Codecov](https://badgen.net/bundlephobia/minzip/@bloc-state/bloc?color=black)
-![Codecov](https://badgen.net/codecov/c/github/bloc-state/bloc?color=black)
-![Codecov](https://badgen.net/npm/license/@bloc-state/bloc?color=black)
+[![npm version](https://badgen.net/npm/v/@bloc-state/bloc?color=black)](https://npm.im/@bloc-state/bloc)
+[![Codecov](https://badgen.net/codecov/c/github/bloc-state/bloc?color=black)](https://app.codecov.io/gh/bloc-state/bloc)
+[![Codecov](https://badgen.net/npm/license/@bloc-state/bloc?color=black)](https://raw.githubusercontent.com/bloc-state/bloc/main/LICENSE)
 
 ## Introduction
 
@@ -12,8 +11,6 @@ by google at [DartConf](https://www.youtube.com/watch?v=PLHln7wHgPE) in 2018. Th
 modern [Dart Bloc library](https://github.com/felangel/bloc/) `v8.x` api.
 
 ## Installation
-
-### `rxjs` is a `peerDependency`
 
 </br>
 
