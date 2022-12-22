@@ -24,8 +24,8 @@ export abstract class Bloc<
   Event extends BlocEvent,
   State,
 > extends BlocBase<State> {
-  constructor(state: State) {
-    super(state)
+  constructor(state: State, name?: string) {
+    super(state, name)
     this.on = this.on.bind(this)
     this.add = this.add.bind(this)
     this.emit = this.emit.bind(this)

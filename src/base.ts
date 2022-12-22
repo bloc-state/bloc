@@ -10,8 +10,9 @@ import { Change } from "./change"
 import { EmitUpdaterCallback } from "./types"
 
 export abstract class BlocBase<State = unknown> {
-  constructor(state: State) {
+  constructor(state: State, name?: string) {
     this.#state = state
+    this.blocName = name ?? this.constructor.name
     this.emit = this.emit.bind(this)
     this.#stateSubject$ = new BehaviorSubject(state)
     this.state$ = this.#buildStatePipeline()
@@ -93,6 +94,8 @@ export abstract class BlocBase<State = unknown> {
       }
     }
   }
+
+  readonly blocName: string
 
   close() {
     this.#isClosed = true
