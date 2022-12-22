@@ -1,3 +1,10 @@
+## [2.0.2](https://github.com/bloc-state/bloc/compare/v2.0.1...v2.0.2) (2022-12-14)
+
+
+### Bug Fixes
+
+* **docs:** fixed badges URL ([82ac502](https://github.com/bloc-state/bloc/commit/82ac50200a88252883c4cac26e57c6c8722bf889))
+
 ## [2.0.1](https://github.com/bloc-state/bloc/compare/v2.0.0...v2.0.1) (2022-12-09)
 
 ### Bug Fixes
