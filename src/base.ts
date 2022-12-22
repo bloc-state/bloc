@@ -9,7 +9,7 @@ import { Bloc } from "./bloc"
 import { Change } from "./change"
 import { EmitUpdaterCallback } from "./types"
 
-export abstract class BlocBase<State = any> {
+export abstract class BlocBase<State = unknown> {
   constructor(state: State) {
     this.#state = state
     this.emit = this.emit.bind(this)
