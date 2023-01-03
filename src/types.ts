@@ -1,4 +1,3 @@
-import { State } from "@bloc-state/state"
 import { Observable } from "rxjs"
 import { BlocEvent } from "./event"
 
@@ -17,8 +16,6 @@ export interface BlocEmitter<State> {
 }
 
 export type EmitUpdaterCallback<T> = (state: T) => T
-
-export type EmitDataUpdaterCallback<T extends State> = (state: T) => T
 
 export interface Emitter<S> extends BlocEmitter<S> {
   (state: S | EmitUpdaterCallback<S>): void

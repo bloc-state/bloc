@@ -1,47 +1,35 @@
-import {
-  Observable,
-  Subscription,
-  distinctUntilChanged,
-  shareReplay,
-  BehaviorSubject,
-} from "rxjs"
+import { Observable, Subscription, BehaviorSubject, shareReplay } from "rxjs"
 import { Bloc } from "./bloc"
 import { Change } from "./change"
 import { EmitUpdaterCallback } from "./types"
 
 export abstract class BlocBase<State = unknown> {
   constructor(state: State, name?: string) {
-    this.#state = state
+    this._state = state
     this.blocName = name ?? this.constructor.name
     this.emit = this.emit.bind(this)
-    this.#stateSubject$ = new BehaviorSubject(state)
-    this.state$ = this.#buildStatePipeline()
-    this.#stateSubscription = this.#subscribeStateoState()
+    this._stateSubject$ = new BehaviorSubject(state)
+    this.state$ = this._buildStatePipeline()
+    this._stateSubscription = this._subscribeStateoState()
     this.onCreate()
   }
 
-  #isClosed = false
+  private _isClosed = false
+  private _state: State
+  private readonly _stateSubject$: BehaviorSubject<State>
+  private readonly _stateSubscription: Subscription
 
-  #state: State
-
-  readonly #stateSubject$: BehaviorSubject<State>
-
-  readonly #stateSubscription: Subscription
-
-  #subscribeStateoState(): Subscription {
+  private _subscribeStateoState(): Subscription {
     return this.state$.subscribe()
   }
 
-  #buildStatePipeline(): Observable<State> {
-    return this.#stateSubject$
+  private _buildStatePipeline(): Observable<State> {
+    return this._stateSubject$
       .asObservable()
-      .pipe(
-        distinctUntilChanged(),
-        shareReplay({ refCount: true, bufferSize: 1 }),
-      )
+      .pipe(shareReplay({ refCount: true, bufferSize: 1 }))
   }
 
-  #handleNewState(newState: State | EmitUpdaterCallback<State>): State {
+  private _handleNewState(newState: State | EmitUpdaterCallback<State>): State {
     let stateToBeEmitted: State
 
     if (typeof newState === "function") {
@@ -73,21 +61,21 @@ export abstract class BlocBase<State = unknown> {
   readonly state$: Observable<State>
 
   get state(): State {
-    return this.#state
+    return this._state
   }
 
   get isClosed() {
-    return this.#isClosed
+    return this._isClosed
   }
 
   emit(newState: State | EmitUpdaterCallback<State>): void {
-    if (!this.#stateSubject$.closed) {
+    if (!this._stateSubject$.closed) {
       try {
-        const stateToBeEmitted = this.#handleNewState(newState)
-        if (this.#state !== stateToBeEmitted) {
+        const stateToBeEmitted = this._handleNewState(newState)
+        if (this._state !== stateToBeEmitted) {
           this.onChange(new Change(this.state, stateToBeEmitted))
-          this.#state = stateToBeEmitted
-          this.#stateSubject$.next(stateToBeEmitted)
+          this._state = stateToBeEmitted
+          this._stateSubject$.next(stateToBeEmitted)
         }
       } catch (error) {
         if (error instanceof Error) this.onError(error)
@@ -98,10 +86,9 @@ export abstract class BlocBase<State = unknown> {
   readonly blocName: string
 
   close() {
-    this.#isClosed = true
-    this.#stateSubject$.complete()
-    this.#stateSubscription.unsubscribe()
-
+    this._isClosed = true
+    this._stateSubject$.complete()
+    this._stateSubscription.unsubscribe()
     this.onClose()
   }
 }

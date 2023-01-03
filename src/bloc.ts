@@ -31,17 +31,13 @@ export abstract class Bloc<
     this.emit = this.emit.bind(this)
   }
 
-  readonly #eventSubject$ = new Subject<Event>()
-
-  readonly #eventMap = new Map<ClassType<Event>, null>()
-
-  readonly #subscriptions = new Set<Subscription>()
-
-  readonly #emitters = new Set<Emitter<State>>()
-
+  private readonly _eventSubject$ = new Subject<Event>()
+  private readonly _eventMap = new Map<ClassType<Event>, null>()
+  private readonly _subscriptions = new Set<Subscription>()
+  private readonly _emitters = new Set<Emitter<State>>()
   readonly isBlocInstance = true
 
-  #mapEventToStateError(error: Error): Observable<never> {
+  private _mapEventToStateError(error: Error): Observable<never> {
     this.onError(error)
     return EMPTY
   }
@@ -63,11 +59,11 @@ export abstract class Bloc<
     eventHandler: EventHandler<T, State>,
     transformer: EventTransformer<T> = Bloc.transformer,
   ): void {
-    if (this.#eventMap.has(event)) {
+    if (this._eventMap.has(event)) {
       throw new Error(`${event.name} can only have one EventHandler`)
     }
 
-    this.#eventMap.set(event, null)
+    this._eventMap.set(event, null)
 
     const mapEventToState = (event: T): Observable<void> => {
       const stateToBeEmittedStream$ = new Subject<State>()
@@ -134,10 +130,10 @@ export abstract class Bloc<
           sub.unsubscribe()
         }
         disposables = []
-        this.#emitters.delete(emitter)
+        this._emitters.delete(emitter)
       }
 
-      this.#emitters.add(emitter)
+      this._emitters.add(emitter)
 
       return new Observable((subscriber) => {
         stateToBeEmittedStream$.subscribe({
@@ -163,17 +159,17 @@ export abstract class Bloc<
     }
 
     const transformStream$ = transformer(
-      this.#eventSubject$.pipe(
+      this._eventSubject$.pipe(
         filter((newEvent): newEvent is T => newEvent instanceof event),
       ),
       mapEventToState,
     )
 
     const subscription = transformStream$
-      .pipe(catchError((error: Error) => this.#mapEventToStateError(error)))
+      .pipe(catchError((error: Error) => this._mapEventToStateError(error)))
       .subscribe()
 
-    this.#subscriptions.add(subscription)
+    this._subscriptions.add(subscription)
   }
 
   static transformer: EventTransformer<any> = (events$, mapper) =>
@@ -182,10 +178,10 @@ export abstract class Bloc<
   static observer: BlocObserver = new BlocObserver()
 
   add(event: Event) {
-    if (!this.#eventSubject$.closed) {
+    if (!this._eventSubject$.closed) {
       try {
         this.onEvent(event)
-        this.#eventSubject$.next(event)
+        this._eventSubject$.next(event)
       } catch (error) {
         if (error instanceof Error) this.onError(error)
       }
@@ -194,16 +190,10 @@ export abstract class Bloc<
   }
 
   override close(): void {
-    for (const emitter of this.#emitters) {
-      emitter.close()
-    }
-
-    for (const sub of this.#subscriptions) {
-      sub.unsubscribe()
-    }
-
-    this.#emitters.clear()
-    this.#subscriptions.clear()
+    this._emitters.forEach((emitter) => emitter.close())
+    this._subscriptions.forEach((subscription) => subscription.unsubscribe())
+    this._emitters.clear()
+    this._subscriptions.clear()
     super.close()
   }
 }
