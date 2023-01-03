@@ -1,3 +1,15 @@
+# [2.1.0](https://github.com/bloc-state/bloc/compare/v2.0.2...v2.1.0) (2022-12-22)
+
+
+### Bug Fixes
+
+* **types:** changed any types to unknown where needed ([1d9406d](https://github.com/bloc-state/bloc/commit/1d9406d6a4d10e6726c030851770aea4ab73a6a3))
+
+
+### Features
+
+* **BlocBase:** added optional name property for Blocs ([0fc3296](https://github.com/bloc-state/bloc/commit/0fc329626c26bad864491d0d00c9f2b5d66180d2))
+
 ## [2.0.2](https://github.com/bloc-state/bloc/compare/v2.0.1...v2.0.2) (2022-12-14)
 
 
